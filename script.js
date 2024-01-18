@@ -5,13 +5,15 @@ function getComputerChoice() {
 }
 
 function getPlayerChoice() {
-  let playerSelection;
+  let playerChoice;
 
   while (true) {
-    playerSelection = prompt("Make your choice:", "").toLowerCase();
+    playerChoice = prompt(
+      "Make your choice. Rock, paper or scissors?"
+    ).toLowerCase();
 
-    if (!OPTIONS.includes(playerSelection)) {
-      alert("Please choose a valid option (rock, paper or scissors)");
+    if (!OPTIONS.includes(playerChoice)) {
+      alert("Invalid option. Please try again.");
       continue;
     }
     break;
@@ -20,5 +22,16 @@ function getPlayerChoice() {
   return playerSelection;
 }
 
-computerSelection = getComputerChoice();
-playerSelection = getPlayerChoice();
+function playRound() {
+  const computerChoice = getComputerChoice();
+  const playerChoice = getPlayerChoice();
+
+  if (playerChoice === computerChoice) {
+      alert("It's a tie! Let's try that round again...");
+      playRound();
+  } else if (isWinner) {
+      alert(`You win! ${playerChoice} beats ${computerChoice}.`)
+  } else {
+      alert(`You lose! ${computerChoice} beats ${playerChoice}.`)
+  } 
+}
