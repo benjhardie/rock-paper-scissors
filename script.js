@@ -15,7 +15,7 @@ function getPlayerChoice() {
     break;
   }
 
-  return playerSelection;
+  return playerChoice;
 }
 
 function getComputerChoice() {
@@ -29,14 +29,16 @@ function playRound() {
   if (playerChoice === computerChoice) {
     alert("It's a tie! Let's try that round again...");
     playRound();
-  } else if (isWinner(playerChoice, computerChoice)) {
-    alert(`You win! ${playerChoice} beats ${computerChoice}.`);
+  } else if (isRoundWinner(playerChoice, computerChoice)) {
+    alert(`You win! ${playerChoice.toUpperCase()} beats ${computerChoice}.`);
+    return true;
   } else {
-    alert(`You lose! ${computerChoice} beats ${playerChoice}.`);
+    alert(`You lose! ${computerChoice.toUpperCase()} beats ${playerChoice}.`);
+    return false;
   }
 }
 
-function isWinner(playerChoice, computerChoice) {
+function isRoundWinner(playerChoice, computerChoice) {
   if (
     (playerChoice === "rock" && computerChoice === "scissors") ||
     (playerChoice === "paper" && computerChoice === "rock") ||
@@ -45,5 +47,27 @@ function isWinner(playerChoice, computerChoice) {
     return true;
   } else {
     return false;
+  }
+}
+function playGame() {
+  let playerScore = 0;
+    let computerScore = 0;
+    
+  for (let game = 0; game < 5; game++) {
+    let playerWin = playRound();
+
+    if (playerWin) {
+      playerScore++;
+    } else {
+      computerScore++;
+    }
+
+    if ((playerScore === 3)) {
+      alert(`You win ${playerScore} games to ${computerScore}!`);
+      return;
+    } else if ((computerScore === 3)) {
+      alert(`You lose ${computerScore} games to ${playerScore}!`);
+      return;
+    }
   }
 }
