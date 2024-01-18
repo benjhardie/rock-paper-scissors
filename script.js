@@ -9,7 +9,7 @@ function getPlayerChoice() {
     ).toLowerCase();
 
     if (!OPTIONS.includes(playerChoice)) {
-      alert("Invalid option. Please try again.");
+      console.log("Invalid option. Please try again.");
       continue;
     }
     break;
@@ -23,51 +23,67 @@ function getComputerChoice() {
 }
 
 function playRound() {
+  // Get player and computer selections
   const playerChoice = getPlayerChoice();
   const computerChoice = getComputerChoice();
 
-  if (playerChoice === computerChoice) {
-    alert("It's a tie! Let's try that round again...");
-    playRound();
-  } else if (isRoundWinner(playerChoice, computerChoice)) {
-    alert(`You win! ${playerChoice.toUpperCase()} beats ${computerChoice}.`);
-    return true;
-  } else {
-    alert(`You lose! ${computerChoice.toUpperCase()} beats ${playerChoice}.`);
-    return false;
-  }
-}
+  // Validate results and return winner
+  let winner;
 
-function isRoundWinner(playerChoice, computerChoice) {
-  if (
+  if (playerChoice === computerChoice) {
+    console.log("It's a tie! Let's play that round again...");
+    winner = null;
+  } else if (
     (playerChoice === "rock" && computerChoice === "scissors") ||
     (playerChoice === "paper" && computerChoice === "rock") ||
     (playerChoice === "scissors" && computerChoice === "paper")
   ) {
-    return true;
+    console.log(
+      `You win! ${
+        playerChoice.charAt(0).toUpperCase() + playerChoice.slice(1)
+      } beats ${computerChoice}.`
+    );
+    winner = "player";
   } else {
-    return false;
+    console.log(
+      `You lose! ${
+        computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1)
+      } beats ${playerChoice}.`
+    );
+    winner = "computer";
   }
+  return winner;
 }
+
 function playGame() {
   let playerScore = 0;
-    let computerScore = 0;
-    
-  for (let game = 0; game < 5; game++) {
-    let playerWin = playRound();
+  let computerScore = 0;
 
-    if (playerWin) {
+  // Play 5 rounds
+  for (let game = 0; game < 5; game++) {
+    let winner;
+
+    // Play round and rematch if round is tied
+    while (!winner) {
+      winner = playRound();
+    }
+
+    //   Update scores
+    if (winner === "player") {
       playerScore++;
     } else {
       computerScore++;
     }
 
-    if ((playerScore === 3)) {
-      alert(`You win ${playerScore} games to ${computerScore}!`);
+    //   Check if game has been won and print result
+    if (playerScore === 3) {
+      console.log(`Player wins ${playerScore} games to ${computerScore}!`);
       return;
-    } else if ((computerScore === 3)) {
-      alert(`You lose ${computerScore} games to ${playerScore}!`);
+    } else if (computerScore === 3) {
+      console.log(`Computer wins ${computerScore} games to ${playerScore}.`);
       return;
     }
   }
 }
+
+playGame();
