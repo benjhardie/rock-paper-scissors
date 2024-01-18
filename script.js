@@ -1,9 +1,5 @@
 const OPTIONS = ["rock", "paper", "scissors"];
 
-function getComputerChoice() {
-  return OPTIONS[Math.floor(Math.random() * OPTIONS.length)];
-}
-
 function getPlayerChoice() {
   let playerChoice;
 
@@ -22,16 +18,32 @@ function getPlayerChoice() {
   return playerSelection;
 }
 
+function getComputerChoice() {
+  return OPTIONS[Math.floor(Math.random() * OPTIONS.length)];
+}
+
 function playRound() {
-  const computerChoice = getComputerChoice();
   const playerChoice = getPlayerChoice();
+  const computerChoice = getComputerChoice();
 
   if (playerChoice === computerChoice) {
-      alert("It's a tie! Let's try that round again...");
-      playRound();
-  } else if (isWinner) {
-      alert(`You win! ${playerChoice} beats ${computerChoice}.`)
+    alert("It's a tie! Let's try that round again...");
+    playRound();
+  } else if (isWinner(playerChoice, computerChoice)) {
+    alert(`You win! ${playerChoice} beats ${computerChoice}.`);
   } else {
-      alert(`You lose! ${computerChoice} beats ${playerChoice}.`)
-  } 
+    alert(`You lose! ${computerChoice} beats ${playerChoice}.`);
+  }
+}
+
+function isWinner(playerChoice, computerChoice) {
+  if (
+    (playerChoice === "rock" && computerChoice === "scissors") ||
+    (playerChoice === "paper" && computerChoice === "rock") ||
+    (playerChoice === "scissors" && computerChoice === "paper")
+  ) {
+    return true;
+  } else {
+    return false;
+  }
 }
