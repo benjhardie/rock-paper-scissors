@@ -65,29 +65,8 @@ function getComputerSelection() {
 }
 
 function updateImgs(playerSelection, computerSelection) {
-    switch (playerSelection) {
-        case "rock":
-            playerSelectionImg.src = ROCK_IMG;
-            break;
-        case "paper":
-            playerSelectionImg.src = PAPER_IMG;
-            break;
-        case "scissors":
-            playerSelectionImg.src = SCISSORS_IMG;
-            break;
-    }
-
-    switch (computerSelection) {
-        case "rock":
-            computerSelectionImg.src = ROCK_IMG;
-            break;
-        case "paper":
-            computerSelectionImg.src = PAPER_IMG;
-            break;
-        case "scissors":
-            computerSelectionImg.src = SCISSORS_IMG;
-            break;
-    }
+    playerSelectionImg.src = eval(`${playerSelection.toUpperCase()}_IMG`);
+    computerSelectionImg.src = eval(`${computerSelection.toUpperCase()}_IMG`);
 }
 
 function playRound(playerSelection, computerSelection) {
@@ -103,16 +82,15 @@ function playRound(playerSelection, computerSelection) {
         (playerSelection === "scissors" && computerSelection === "paper")
     ) {
         winLose.textContent = "You win!";
-        winLoseDetail.textContent = `${
-            playerSelection.charAt(0).toUpperCase() + playerSelection.slice(1)
-        } beats ${computerSelection}.`;
+        winLoseDetail.textContent = `${capitalize(
+            playerSelection
+        )} beats ${computerSelection}.`;
         winner = "player";
     } else {
         winLose.textContent = "You lose!";
-        winLoseDetail.textContent = `${
-            computerSelection.charAt(0).toUpperCase() +
-            computerSelection.slice(1)
-        } beats ${playerSelection}.`;
+        winLoseDetail.textContent = `${capitalize(
+            computerSelection
+        )} beats ${playerSelection}.`;
         winner = "computer";
     }
     updateScores(winner);
@@ -141,4 +119,8 @@ function checkWin() {
 
 function showModal() {
     modal.style.display = "flex";
+}
+
+function capitalize(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
 }
