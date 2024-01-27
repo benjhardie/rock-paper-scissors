@@ -24,17 +24,19 @@ let computerScore = 0;
 
 modalButtons.forEach((button) => {
     button.addEventListener("click", (event) => {
-        resetScore();
+        resetGame();
         hideModal();
     });
 });
 
-function resetScore() {
+function resetGame() {
     playerScore = 0;
     computerScore = 0;
 
     playerScoreText.textContent = 0;
     computerScoreText.textContent = 0;
+    winLose.textContent = "";
+    winLoseDetail.textContent = "";
 }
 
 function hideModal() {
