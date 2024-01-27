@@ -1,89 +1,144 @@
-const OPTIONS = ["rock", "paper", "scissors"];
+const ROCK_IMG = "./images/hand-rock-solid.svg";
+const PAPER_IMG = "./images/hand-paper-solid.svg";
+const SCISSORS_IMG = "./images/hand-scissors-solid.svg";
 
-function getPlayerChoice() {
-  let playerChoice;
+const modal = document.querySelector("#modal");
+const startModal = document.querySelector("#start-modal");
+const endModal = document.querySelector("#end-modal");
+const modalButtons = document.querySelectorAll(".modal-content button");
+const gameResult = document.querySelector("#game-result");
 
-  while (true) {
-    playerChoice = prompt(
-      "Make your choice. Rock, paper or scissors?"
-    ).toLowerCase();
+const playerScoreText = document.querySelector("#player-score");
+const computerScoreText = document.querySelector("#computer-score");
+const playerSelectionImg = document.querySelector("#player-selection");
+const computerSelectionImg = document.querySelector("#computer-selection");
 
-    if (!OPTIONS.includes(playerChoice)) {
-      console.log("Invalid option. Please try again.");
-      continue;
+const winLose = document.querySelector("#win-lose");
+const winLoseDetail = document.querySelector("#win-lose-detail");
+
+const weapons = document.querySelectorAll(".weapon");
+
+const MAX_SCORE = 5;
+let playerScore = 0;
+let computerScore = 0;
+
+modalButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+        resetScore();
+        hideModal();
+    });
+});
+
+function resetScore() {
+    playerScore = 0;
+    computerScore = 0;
+
+    playerScoreText.textContent = 0;
+    computerScoreText.textContent = 0;
+}
+
+function hideModal() {
+    modal.style.display = "none";
+    startModal.style.display = "none";
+    endModal.style.display = "flex";
+}
+
+weapons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+        let playerSelection = event.currentTarget.id;
+        let computerSelection = getComputerSelection();
+
+        updateImgs(playerSelection, computerSelection);
+        playRound(playerSelection, computerSelection);
+    });
+});
+
+function getComputerSelection() {
+    switch (Math.floor(Math.random() * 3)) {
+        case 0:
+            return "rock";
+        case 1:
+            return "paper";
+        case 2:
+            return "scissors";
     }
-    break;
-  }
-
-  return playerChoice;
 }
 
-function getComputerChoice() {
-  return OPTIONS[Math.floor(Math.random() * OPTIONS.length)];
+function updateImgs(playerSelection, computerSelection) {
+    switch (playerSelection) {
+        case "rock":
+            playerSelectionImg.src = ROCK_IMG;
+            break;
+        case "paper":
+            playerSelectionImg.src = PAPER_IMG;
+            break;
+        case "scissors":
+            playerSelectionImg.src = SCISSORS_IMG;
+            break;
+    }
+
+    switch (computerSelection) {
+        case "rock":
+            computerSelectionImg.src = ROCK_IMG;
+            break;
+        case "paper":
+            computerSelectionImg.src = PAPER_IMG;
+            break;
+        case "scissors":
+            computerSelectionImg.src = SCISSORS_IMG;
+            break;
+    }
 }
 
-function playRound() {
-  // Get player and computer selections
-  const playerChoice = getPlayerChoice();
-  const computerChoice = getComputerChoice();
-
-  // Validate results and return winner
-  let winner;
-
-  if (playerChoice === computerChoice) {
-    console.log("It's a tie! Let's play that round again...");
-    winner = null;
-  } else if (
-    (playerChoice === "rock" && computerChoice === "scissors") ||
-    (playerChoice === "paper" && computerChoice === "rock") ||
-    (playerChoice === "scissors" && computerChoice === "paper")
-  ) {
-    console.log(
-      `You win! ${
-        playerChoice.charAt(0).toUpperCase() + playerChoice.slice(1)
-      } beats ${computerChoice}.`
-    );
-    winner = "player";
-  } else {
-    console.log(
-      `You lose! ${
-        computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1)
-      } beats ${playerChoice}.`
-    );
-    winner = "computer";
-  }
-  return winner;
-}
-
-function playGame() {
-  let playerScore = 0;
-  let computerScore = 0;
-
-  // Play 5 rounds
-  for (let game = 0; game < 5; game++) {
+function playRound(playerSelection, computerSelection) {
     let winner;
 
-    // Play round and rematch if round is tied
-    while (!winner) {
-      winner = playRound();
-    }
-
-    //   Update scores
-    if (winner === "player") {
-      playerScore++;
+    if (playerSelection === computerSelection) {
+        winLose.textContent = "It's a tie!";
+        winLoseDetail.textContent = "";
+        return;
+    } else if (
+        (playerSelection === "rock" && computerSelection === "scissors") ||
+        (playerSelection === "paper" && computerSelection === "rock") ||
+        (playerSelection === "scissors" && computerSelection === "paper")
+    ) {
+        winLose.textContent = "You win!";
+        winLoseDetail.textContent = `${
+            playerSelection.charAt(0).toUpperCase() + playerSelection.slice(1)
+        } beats ${computerSelection}.`;
+        winner = "player";
     } else {
-      computerScore++;
+        winLose.textContent = "You lose!";
+        winLoseDetail.textContent = `${
+            computerSelection.charAt(0).toUpperCase() +
+            computerSelection.slice(1)
+        } beats ${playerSelection}.`;
+        winner = "computer";
     }
-
-    //   Check if game has been won and print result
-    if (playerScore === 3) {
-      console.log(`Player wins ${playerScore} games to ${computerScore}!`);
-      return;
-    } else if (computerScore === 3) {
-      console.log(`Computer wins ${computerScore} games to ${playerScore}.`);
-      return;
-    }
-  }
+    updateScores(winner);
 }
 
-playGame();
+function updateScores(winner) {
+    if (winner === "player") {
+        playerScore++;
+        playerScoreText.textContent = playerScore;
+    } else {
+        computerScore++;
+        computerScoreText.textContent = computerScore;
+    }
+    checkWin();
+}
+
+function checkWin() {
+    if (playerScore === MAX_SCORE) {
+        gameResult.textContent = "You win!";
+        showModal();
+    } else if (computerScore === MAX_SCORE) {
+        gameResult.textContent = "You lose!";
+        showModal();
+    }
+}
+
+function showModal() {
+    modal.style.display = "flex";
+}
